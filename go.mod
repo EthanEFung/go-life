@@ -3,7 +3,12 @@ module github.com/ethanefung/go-life
 go 1.18
 
 require (
-	github.com/charmbracelet/bubbletea v0.22.1 // indirect
+	github.com/charmbracelet/bubbletea v0.22.1
+	github.com/charmbracelet/lipgloss v0.5.0
+	github.com/danesparza/RainbowVis v0.0.0-20210723164203-c3939eb70e5c
+)
+
+require (
 	github.com/containerd/console v1.0.3 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect

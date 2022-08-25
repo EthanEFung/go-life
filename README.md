@@ -5,11 +5,9 @@
 A simple terminal application that allows users to create their own organisms and
 simulate its states. Based on the [famous cellular automaton](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
-To run this application from the command line run
+To run this application locally from the command line execute the following commands
 ```
-git clone git@github.com:EthanEFung/go-life
-cd go-life
-go install github.com/ethanefung/go-life
+go install github.com/ethanefung/go-life@latest
 go-life
 ```
 
@@ -23,7 +21,7 @@ grid. Press space to toggle a cell from 0 -> 1 or 1 -> 0. 1 represents a live ce
 Pressing enter again to pause the simulation which can be helpful if you want to setup
 another organism before it dies.
 
-1. `enter` - toggles the simulation from play -> pauase and vise versa
+1. `enter` - toggles the simulation from play -> pause and vise versa
 2. `space` - toggles the cell of the cursor from dead -> alive and vise versa
 3. arrow keys moves the cursor. Alternatively, you can use the `h, j, k, l` keys
 

@@ -5,6 +5,8 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	rainbow "github.com/danesparza/RainbowVis"
 )
 
 type TickMsg time.Time
@@ -17,6 +19,7 @@ type Model struct {
 	simulate bool
 	grid     [][]int
 	cursor   coord
+	styles   []lipgloss.Style
 }
 
 func New() Model {
@@ -32,6 +35,22 @@ func New() Model {
 
 	cursor := coord{5, 5}
 	m.cursor = cursor
+
+	rb := rainbow.GetRainbow()
+	err := rb.SetSpectrum("#27BBE0", "#31DB92", "#FEF720")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = rb.SetNumberRange(0, len(m.grid[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	styles := make([]lipgloss.Style, len(m.grid[0]))
+	for i := range styles {
+		styles[i] = lipgloss.NewStyle().Foreground(lipgloss.Color("#" + rb.ColorAt(i)))
+	}
+	m.styles = styles
 
 	return *m
 }
@@ -61,7 +80,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// The "down" and "j" keys move the cursor down
 		case "down", "j":
-			if m.cursor.row < len(m.grid) - 1 {
+			if m.cursor.row < len(m.grid)-1 {
 				m.cursor.row++
 			}
 
@@ -73,7 +92,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// The "right" and "l" keys move the cursor down
 		case "right", "l":
-			if m.cursor.col < len(m.grid[0]) - 1 {
+			if m.cursor.col < len(m.grid[0])-1 {
 				m.cursor.col++
 			}
 		// the selected state for the item that the cursor is pointing at.
@@ -118,14 +137,14 @@ func (m Model) Mutate() (tea.Model, tea.Cmd) {
 	for row := range m.grid {
 		for col := range m.grid[row] {
 			neighbors := []coord{
-				{row-1, col-1},
-				{row-1, col},
-				{row-1, col+1},
-				{row  , col-1},
-				{row  , col+1},
-				{row+1, col-1},
-				{row+1, col},
-				{row+1, col+1},
+				{row - 1, col - 1},
+				{row - 1, col},
+				{row - 1, col + 1},
+				{row, col - 1},
+				{row, col + 1},
+				{row + 1, col - 1},
+				{row + 1, col},
+				{row + 1, col + 1},
 			}
 
 			var count int
@@ -134,13 +153,13 @@ func (m Model) Mutate() (tea.Model, tea.Cmd) {
 				if neighbor.row < 0 {
 					neighbor.row = len(m.grid) - 1
 				}
-				if neighbor.row > len(m.grid) - 1 {
+				if neighbor.row > len(m.grid)-1 {
 					neighbor.row = 0
 				}
 				if neighbor.col < 0 {
 					neighbor.col = len(m.grid[0]) - 1
 				}
-				if neighbor.col > len(m.grid[0]) - 1 {
+				if neighbor.col > len(m.grid[0])-1 {
 					neighbor.col = 0
 				}
 				count += m.grid[neighbor.row][neighbor.col]
@@ -170,15 +189,15 @@ func (m Model) View() string {
 			if r == cursor.row && c == cursor.col {
 				result += "X"
 			} else if m.grid[r][c] == 1 {
-				result += "1"
+				result += m.styles[c].Render("0")
 			} else {
-				result += "0"
+				result += " "
 			}
 		}
 		result += "\n"
 	}
 
-	return result 
+	return result
 }
 
 func main() {
